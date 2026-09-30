@@ -1,6 +1,6 @@
 {
-  "name": "Calculadora de Bono Stefi",
-  "short_name": "Bono Stefi",
+  "name": "Stefi Calculator",
+  "short_name": "Stefi Calculator",
   "description": "Calcula el bono que hay que ingresar para que el sueldo líquido crezca lo pedido, con o sin gratificación legal.",
   "lang": "es-CL",
   "start_url": "./index.html",

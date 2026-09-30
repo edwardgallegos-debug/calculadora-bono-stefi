@@ -1,10 +1,14 @@
-# Calculadora de Bono Stefi
+# Stefi Calculator
 
 App web instalable (PWA) para iPhone: calcula el **bono imponible que hay que ingresar** para que el sueldo líquido
 de un trabajador crezca un monto dado (por ejemplo $150.000), **con o sin gratificación legal**.
 
 Es el módulo «Bono de ajuste» del *Ajustador de Liquidaciones* de Reserva Las Torres, con el mismo motor de cálculo
 (portado a JavaScript y verificado contra la versión Python en 300 casos aleatorios: 0 diferencias).
+
+## Privacidad
+La app es 100 % local: no tiene servidor, cuentas ni análisis. Los montos, la previsión y los parámetros se guardan solo
+en el navegador del teléfono (`localStorage`) y nunca se envían a ninguna parte. El repositorio no contiene datos de trabajadores.
 
 ## Cómo se usa
 1. Ingrese el **sueldo líquido actual** y **cuánto debe crecer**.

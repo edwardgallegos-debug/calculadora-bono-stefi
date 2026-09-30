@@ -1,9 +1,9 @@
-/* Interfaz de la Calculadora de Bono Stefi. La lógica de cálculo está en motor.js. */
+/* Interfaz de Stefi Calculator. La lógica de cálculo está en motor.js. */
 (function () {
   "use strict";
   const $ = id => document.getElementById(id);
-  const CLAVE_PARAMS = "bonoStefi.params.v1";
-  const CLAVE_PREV = "bonoStefi.prev.v1";
+  const CLAVE_PARAMS = "stefiCalc.params.v1";
+  const CLAVE_PREV = "stefiCalc.prev.v1";
 
   // ---------- almacenamiento (puede fallar en modo privado: la app funciona igual) ----------
   const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* sin almacenamiento */ } };
