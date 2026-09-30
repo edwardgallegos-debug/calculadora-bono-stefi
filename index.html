@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora de Bono Stefi</title>
+<meta name="description" content="Calcula el bono que hay que ingresar para que el sueldo líquido crezca lo pedido.">
+<meta name="theme-color" content="#0f6b4f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bono Stefi">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <h1>Calculadora de Bono Stefi</h1>
+    <button id="btnAjustes" class="ghost" type="button" aria-label="Parámetros legales">⚙︎</button>
+  </div>
+</header>
+
+<main>
+  <section class="card" aria-labelledby="t1">
+    <h2 id="t1">Sueldo y aumento</h2>
+    <label for="liquido">Sueldo líquido actual ($)</label>
+    <input id="liquido" inputmode="numeric" autocomplete="off" placeholder="Ej.: 700.000">
+    <label for="aumento">Cuánto debe crecer el líquido ($)</label>
+    <input id="aumento" inputmode="numeric" autocomplete="off" placeholder="Ej.: 150.000">
+
+    <div class="grat">
+      <label class="switch">
+        <input type="checkbox" id="conGrat" checked>
+        <span class="chk" aria-hidden="true"></span>
+        <span class="switch-txt"><b>El bono lleva gratificación legal</b>
+          <small id="gratAyuda"></small></span>
+      </label>
+    </div>
+
+    <details class="mas">
+      <summary>Datos opcionales</summary>
+      <label for="noimp">No imponibles actuales ($)</label>
+      <input id="noimp" inputmode="numeric" autocomplete="off" placeholder="0">
+      <label for="desc">Descuentos fijos actuales ($)</label>
+      <input id="desc" inputmode="numeric" autocomplete="off" placeholder="0">
+    </details>
+  </section>
+
+  <section class="card" aria-labelledby="t2">
+    <h2 id="t2">Previsión del trabajador</h2>
+    <div class="grid2">
+      <div><label for="afp">AFP</label><select id="afp"></select></div>
+      <div><label for="contrato">Contrato</label>
+        <select id="contrato"><option value="indef">Indefinido</option><option value="fijo">Plazo fijo / obra</option></select></div>
+      <div><label for="salud">Salud</label>
+        <select id="salud"><option value="fonasa">Fonasa</option><option value="isapre">Isapre</option></select></div>
+      <div id="planWrap" hidden><label for="plan">Plan Isapre (UF)</label>
+        <input id="plan" inputmode="decimal" autocomplete="off" placeholder="Ej.: 4,5"></div>
+      <div><label for="zona">Zona extrema (%)</label>
+        <input id="zona" inputmode="decimal" autocomplete="off" placeholder="98"></div>
+    </div>
+    <label class="check"><input type="checkbox" id="jub"><span>Jubilado / pensionado (sin AFP ni cesantía)</span></label>
+  </section>
+
+  <button id="btnCalc" class="primary" type="button">Calcular bono</button>
+  <p id="error" class="error" role="alert" hidden></p>
+
+  <section id="resultado" class="card res" hidden aria-live="polite">
+    <div class="big">
+      <span id="modo" class="modo"></span>
+      <span id="montoBono" class="monto"></span>
+      <span id="frase" class="frase"></span>
+    </div>
+    <table id="detalle" class="det"><caption>Detalle del cálculo</caption><tbody></tbody></table>
+    <p id="alt" class="alt"></p>
+    <ul id="avisos" class="avisos"></ul>
+  </section>
+
+  <p class="pie">Cálculo con parámetros de <span id="pPeriodo"></span> (UF <span id="pUf"></span>, UTM <span id="pUtm"></span>).
+    Referencial: siempre confirme el resultado en el sistema de remuneraciones.</p>
+</main>
+
+<dialog id="dlgAjustes">
+  <form method="dialog" class="dlg">
+    <h2>Parámetros legales</h2>
+    <p class="hint">Actualice UF y UTM cada mes. Los cambios se guardan en este teléfono.</p>
+    <div id="camposAj" class="grid2"></div>
+    <h3>Comisión AFP (%)</h3>
+    <div id="camposAfp" class="grid2"></div>
+    <div class="dlg-bt">
+      <button type="button" id="btnRestaurar" class="ghost txt">Restaurar valores</button>
+      <button type="button" id="btnGuardarAj" class="primary sm">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="motor.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

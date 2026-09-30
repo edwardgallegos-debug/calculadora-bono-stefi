@@ -1,0 +1,17 @@
+{
+  "name": "Calculadora de Bono Stefi",
+  "short_name": "Bono Stefi",
+  "description": "Calcula el bono que hay que ingresar para que el sueldo líquido crezca lo pedido, con o sin gratificación legal.",
+  "lang": "es-CL",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f6b4f",
+  "theme_color": "#0f6b4f",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
