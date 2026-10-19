@@ -23,11 +23,12 @@
   const guardados = leer(CLAVE_PARAMS);
   if (guardados) {
     // Si la app trae un período más nuevo que el guardado, se descartan UF/UTM/período guardados (quedarían desactualizados).
-    if (guardados.periodo && guardados.periodo < P.periodo) { delete guardados.uf; delete guardados.utm; delete guardados.periodo; }
+    if (guardados.periodo && guardados.periodo < P.periodo) { delete guardados.uf; delete guardados.utm; delete guardados.periodo; guardados.manual = false; }
     for (const k of Object.keys(guardados)) {
       if (k === "afps") Object.assign(P.afps, guardados.afps);
       else if (k in P && k !== "tramos") P[k] = guardados[k];
     }
+    P.manual = !!guardados.manual;
   }
   const CAMPOS = [
     ["uf", "UF ($)", "dec"], ["utm", "UTM ($)", "dec"], ["imm", "Ingreso mínimo ($)", "int"],
@@ -40,8 +41,9 @@
     ["mutual_pct", "Mutualidad (%)", "dec"], ["aporte_reforma_pct", "Aporte reforma (%)", "dec"], ["sis_pct", "SIS aparte (%)", "dec"],
   ];
 
+  let origenUfUtm = "";
   function pintarPie() {
-    $("pPeriodo").textContent = P.periodo;
+    $("pPeriodo").textContent = P.periodo + (origenUfUtm ? " · " + origenUfUtm : "");
     $("pUf").textContent = "$" + P.uf.toLocaleString("es-CL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     $("pUtm").textContent = "$" + miles(P.utm);
   }
@@ -166,12 +168,14 @@
     $("dlgAjustes").showModal();
   }
   function guardarAjustes() {
+    const ufAntes = P.uf, utmAntes = P.utm;
     CAMPOS.forEach(([clave, , tipo]) => {
       const txt = $("aj_" + clave).value.trim();
       if (tipo === "int") { const n = numero(txt); P[clave] = clave === "grado1a" ? (n > 0 ? n : null) : n; }
       else { const v = decimal(txt); if (v > 0 || txt === "0") P[clave] = v; }
     });
     Object.keys(P.afps).forEach(n => { P.afps[n] = decimal($("afp_" + n).value); });
+    if (P.uf !== ufAntes || P.utm !== utmAntes) { P.manual = true; origenUfUtm = "manual"; }   // el ajuste a mano manda dentro del mismo período
     const g = Object.assign({}, P); delete g.tramos;
     guardar(CLAVE_PARAMS, g);
     llenarAfps(); pintarPie();
@@ -185,6 +189,23 @@
     llenarAfps(); pintarPie(); abrirAjustes();
   }
 
+  // ---------- actualización automática de UF y UTM ----------
+  // params.json lo mantiene al día una tarea de GitHub (ver .github/workflows). Sin conexión se usan los valores guardados.
+  function guardarParams() { const g = Object.assign({}, P); delete g.tramos; guardar(CLAVE_PARAMS, g); }
+  function actualizarAutomatico() {
+    fetch("params.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(j => {
+      if (!j || !(j.uf > 0) || !(j.utm > 0) || !j.periodo) return;
+      const nuevoPeriodo = j.periodo > P.periodo;
+      const mismoPeriodo = j.periodo === P.periodo;
+      if (!(nuevoPeriodo || (mismoPeriodo && !P.manual))) { if (mismoPeriodo && P.manual) { origenUfUtm = "manual"; pintarPie(); } return; }
+      const cambio = P.uf !== j.uf || P.utm !== j.utm || P.periodo !== j.periodo;
+      P.uf = j.uf; P.utm = j.utm; P.periodo = j.periodo; P.manual = false;
+      origenUfUtm = "automático";
+      guardarParams(); pintarPie();
+      if (cambio && ultimo) calcular();
+    }).catch(() => { /* sin conexión: se mantienen los valores actuales */ });
+  }
+
   // ---------- inicio ----------
   llenarAfps(); cargarPrevision(); actualizarSalud(); actualizarAyuda(); pintarPie();
   $("salud").addEventListener("change", () => { actualizarSalud(); });
@@ -194,6 +215,8 @@
   $("btnAjustes").addEventListener("click", abrirAjustes);
   $("btnGuardarAj").addEventListener("click", guardarAjustes);
   $("btnRestaurar").addEventListener("click", restaurar);
+
+  actualizarAutomatico();
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => { /* sin modo sin conexión */ }); });

@@ -1,6 +1,6 @@
 /* Service worker: guarda los archivos para que la app abra sin conexión. Suba VERSION al publicar cambios. */
-const VERSION = "stefi-calculator-1.2.0";
-const ARCHIVOS = ["./", "index.html", "style.css", "motor.js", "app.js", "manifest.webmanifest",
+const VERSION = "stefi-calculator-1.3.0";
+const ARCHIVOS = ["./", "index.html", "style.css", "motor.js", "app.js", "manifest.webmanifest", "params.json",
                   "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(ARCHIVOS)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => {

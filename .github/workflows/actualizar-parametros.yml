@@ -1,0 +1,44 @@
+name: Actualizar UF y UTM
+
+on:
+  schedule:
+    - cron: "17 9 * * *"      # todos los días 09:17 UTC (06:17 en Punta Arenas); si no hay cambios no hace nada
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/actualizar_parametros.mjs"
+      - ".github/workflows/actualizar-parametros.yml"
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: actualizar-parametros
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Leer UF y UTM del mes
+        run: node scripts/actualizar_parametros.mjs
+      - name: Publicar si cambió
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet params.json; then
+            echo "params.json sin cambios"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add params.json
+          git commit -m "Actualiza UF y UTM automáticamente"
+          git push
+          # el push con GITHUB_TOKEN no siempre dispara el despliegue de Pages: se pide explícitamente
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true

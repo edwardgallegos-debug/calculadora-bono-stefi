@@ -23,6 +23,12 @@ Los datos opcionales (no imponibles y descuentos fijos actuales) se abren en «D
 2. Tocar **Compartir → Añadir a pantalla de inicio**.
 3. Se abre como una app, con ícono propio y sin conexión a internet.
 
+## Actualización automática de UF y UTM
+Una tarea de GitHub Actions (`.github/workflows/actualizar-parametros.yml`) corre todos los días, lee la UTM del mes y la UF del último día del mes
+(mindicador.cl) y, si cambiaron, actualiza `params.json` y republica la app. La app lee `params.json` de su propio sitio al abrirse: en el pie
+indica «automático». Sin conexión usa los últimos valores guardados. Si se edita UF o UTM a mano en ⚙︎, ese valor manda hasta que llegue un
+período nuevo. La tarea no usa claves ni datos de personas; si la fuente falla o el cambio es > 3 %, la tarea falla y no toca el archivo.
+
 ## Parámetros legales
 Botón ⚙︎ (arriba a la derecha): UF, UTM, ingreso mínimo, topes, tasas y comisiones AFP. **UF y UTM deben actualizarse
 cada mes.** Se guardan en el teléfono. Valores iniciales: octubre 2026 (UTM $72.151; UF $41.247,63 del 31-oct, la de la liquidación).
