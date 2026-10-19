@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "scripts/actualizar_parametros.mjs"
+      - "scripts/**"
       - ".github/workflows/actualizar-parametros.yml"
 
 permissions:
@@ -25,6 +25,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Probar lectores del SII
+        run: node tests/sii.test.mjs
       - name: Leer UF y UTM del mes
         run: node scripts/actualizar_parametros.mjs
       - name: Publicar si cambió

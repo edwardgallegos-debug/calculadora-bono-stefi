@@ -25,7 +25,7 @@ Los datos opcionales (no imponibles y descuentos fijos actuales) se abren en «D
 
 ## Actualización automática de UF y UTM
 Una tarea de GitHub Actions (`.github/workflows/actualizar-parametros.yml`) corre todos los días, lee la UTM del mes y la UF del último día del mes
-(mindicador.cl) y, si cambiaron, actualiza `params.json` y republica la app. La app lee `params.json` de su propio sitio al abrirse: en el pie
+(tablas oficiales del SII; respaldo: mindicador.cl) y, si cambiaron, actualiza `params.json` y republica la app. La app lee `params.json` de su propio sitio al abrirse: en el pie
 indica «automático». Sin conexión usa los últimos valores guardados. Si se edita UF o UTM a mano en ⚙︎, ese valor manda hasta que llegue un
 período nuevo. La tarea no usa claves ni datos de personas; si la fuente falla o el cambio es > 3 %, la tarea falla y no toca el archivo.
 
