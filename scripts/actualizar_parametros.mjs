@@ -59,3 +59,4 @@ if (actual.periodo === periodo && actual.uf === uf && actual.utm === utm) { cons
 const nuevo = { periodo, uf, utm, actualizado: hoy };
 writeFileSync(ARCHIVO, JSON.stringify(nuevo, null, 2) + "\n");
 console.log("Actualizado:", JSON.stringify(nuevo));
+// Última verificación de extremo a extremo: 2026-10-19
