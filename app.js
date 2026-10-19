@@ -22,6 +22,8 @@
   let P = Motor.parametrosDefecto();
   const guardados = leer(CLAVE_PARAMS);
   if (guardados) {
+    // Si la app trae un período más nuevo que el guardado, se descartan UF/UTM/período guardados (quedarían desactualizados).
+    if (guardados.periodo && guardados.periodo < P.periodo) { delete guardados.uf; delete guardados.utm; delete guardados.periodo; }
     for (const k of Object.keys(guardados)) {
       if (k === "afps") Object.assign(P.afps, guardados.afps);
       else if (k in P && k !== "tramos") P[k] = guardados[k];

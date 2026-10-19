@@ -24,7 +24,7 @@
 
   function parametrosDefecto() {
     return {
-      periodo: "2026-09", uf: 41057.20, utm: 71721.0, imm: 553553,
+      periodo: "2026-10", uf: 41247.63, utm: 72151.0, imm: 553553,
       tope_afp_uf: 90.0, tope_ces_uf: 135.2, cot_afp: 10.0, cot_salud: 7.0, ces_trab_indef: 0.6,
       grat_pct: 25.0, grat_tope_imm: 4.75, ccaf_pct: 4.2, grado1a: null, trib_plan_completo: true,
       ces_emp_indef: 2.4, ces_emp_fijo: 3.0, mutual_pct: 0.93, aporte_reforma_pct: 3.5, sis_pct: 0.0,

@@ -25,7 +25,7 @@ Los datos opcionales (no imponibles y descuentos fijos actuales) se abren en «D
 
 ## Parámetros legales
 Botón ⚙︎ (arriba a la derecha): UF, UTM, ingreso mínimo, topes, tasas y comisiones AFP. **UF y UTM deben actualizarse
-cada mes.** Se guardan en el teléfono. Valores iniciales: septiembre 2026.
+cada mes.** Se guardan en el teléfono. Valores iniciales: octubre 2026 (UTM $72.151; UF $41.247,63 del 31-oct, la de la liquidación).
 
 ## Publicación (GitHub Pages)
 Es un sitio estático (sin servidor): `index.html`, `style.css`, `motor.js`, `app.js`, `sw.js`, `manifest.webmanifest` e `icons/`.
