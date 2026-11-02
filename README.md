@@ -27,7 +27,9 @@ Los datos opcionales (no imponibles y descuentos fijos actuales) se abren en «D
 Una tarea de GitHub Actions (`.github/workflows/actualizar-parametros.yml`) corre todos los días, lee la UTM del mes y la UF del último día del mes
 (tablas oficiales del SII; respaldo: mindicador.cl) y, si cambiaron, actualiza `params.json` y republica la app. La app lee `params.json` de su propio sitio al abrirse: en el pie
 indica «automático». Sin conexión usa los últimos valores guardados. Si se edita UF o UTM a mano en ⚙︎, ese valor manda hasta que llegue un
-período nuevo. La tarea no usa claves ni datos de personas; si la fuente falla o el cambio es > 3 %, la tarea falla y no toca el archivo.
+período nuevo. La tarea no usa claves ni datos de personas. Si la fuente aún no tiene el dato publicado o falla por red (timeout, etc.), la tarea
+termina en éxito sin tocar el archivo y reintenta al día siguiente; solo falla (y notifica) cuando el valor obtenido es inválido o cambió más de 3 %,
+lo que indica un problema real que requiere revisión manual.
 
 ## Parámetros legales
 Botón ⚙︎ (arriba a la derecha): UF, UTM, ingreso mínimo, topes, tasas y comisiones AFP. **UF y UTM deben actualizarse
