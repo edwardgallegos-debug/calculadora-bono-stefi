@@ -46,8 +46,18 @@ const [anio, mes] = periodo.split("-").map(Number);
 const ultimoDia = new Date(Date.UTC(anio, mes, 0)).getUTCDate();
 const { uf, utm, fuente } = await valores(anio, mes, ultimoDia);
 console.log(`Fuente: ${fuente}. UF ${ultimoDia}/${mes}: ${uf}. UTM ${mes}/${anio}: ${utm}`);
-if (!(uf > 30000 && uf < 80000)) throw new Error("UF fuera de rango o ausente: " + uf);
-if (!(utm > 50000 && utm < 120000)) throw new Error("UTM fuera de rango o ausente: " + utm);
+// El SII (y mindicador, su espejo) publican la UF día a día dentro del mes, no el mes completo
+// por adelantado: es normal que a inicios de mes la UF del último día aún no exista en ninguna
+// fuente. Eso no es un error — se reintenta en la próxima ejecución programada sin marcar el
+// job como fallido (evita spam de "Run failed" mientras se espera la publicación).
+if (uf == null || Number.isNaN(uf) || utm == null || Number.isNaN(utm)) {
+  console.log("Aún no está publicada la UF y/o UTM de este período. Se reintentará en la próxima ejecución programada.");
+  process.exit(0);
+}
+// A partir de aquí SÍ tenemos un valor numérico: si está fuera de rango plausible, es señal de
+// un problema real (cambio de formato en la fuente, dato corrupto, etc.) y debe alertar.
+if (!(uf > 30000 && uf < 80000)) throw new Error("UF fuera de rango: " + uf);
+if (!(utm > 50000 && utm < 120000)) throw new Error("UTM fuera de rango: " + utm);
 
 const actual = JSON.parse(readFileSync(ARCHIVO, "utf8"));
 for (const [nom, nuevo, viejo] of [["UF", uf, actual.uf], ["UTM", utm, actual.utm]]) {
