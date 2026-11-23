@@ -41,9 +41,10 @@
     ["mutual_pct", "Mutualidad (%)", "dec"], ["aporte_reforma_pct", "Aporte reforma (%)", "dec"], ["sis_pct", "SIS aparte (%)", "dec"],
   ];
 
-  let origenUfUtm = "";
+  let origenUfUtm = "", fechaAct = "";
+  const fmtFecha = iso => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || ""); return m ? m[3] + "-" + m[2] + "-" + m[1] : ""; };
   function pintarPie() {
-    $("pPeriodo").textContent = P.periodo + (origenUfUtm ? " · " + origenUfUtm : "");
+    $("pPeriodo").textContent = P.periodo + (origenUfUtm ? " · " + origenUfUtm + (origenUfUtm === "automático" && fechaAct ? " (datos del " + fechaAct + ")" : "") : "");
     $("pUf").textContent = "$" + P.uf.toLocaleString("es-CL", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     $("pUtm").textContent = "$" + miles(P.utm);
   }
@@ -195,6 +196,7 @@
   function actualizarAutomatico() {
     fetch("params.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(j => {
       if (!j || !(j.uf > 0) || !(j.utm > 0) || !j.periodo) return;
+      fechaAct = fmtFecha(j.actualizado);
       const nuevoPeriodo = j.periodo > P.periodo;
       const mismoPeriodo = j.periodo === P.periodo;
       if (!(nuevoPeriodo || (mismoPeriodo && !P.manual))) { if (mismoPeriodo && P.manual) { origenUfUtm = "manual"; pintarPie(); } return; }
@@ -217,6 +219,10 @@
   $("btnRestaurar").addEventListener("click", restaurar);
 
   actualizarAutomatico();
+  // En el iPhone la app queda en segundo plano por días: se vuelve a revisar al reabrirla o al recuperar conexión.
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") actualizarAutomatico(); });
+  window.addEventListener("pageshow", actualizarAutomatico);
+  window.addEventListener("online", actualizarAutomatico);
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => { /* sin modo sin conexión */ }); });
